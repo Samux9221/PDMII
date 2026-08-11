@@ -17,4 +17,10 @@
         android:theme="?attr/actionBarTheme"
         app:subtitle="Subtítulo"
         app:title="Título" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
