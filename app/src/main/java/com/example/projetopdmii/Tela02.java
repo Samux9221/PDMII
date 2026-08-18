@@ -1,11 +1,14 @@
 package com.example.projetopdmii;
 
+import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 
 import androidx.activity.EdgeToEdge;
@@ -15,12 +18,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener, Runnable {
+public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener, Runnable, View.OnClickListener {
     private Toolbar toolbar;
+    private boolean flag;
+    private int musica; //esse sera o endereço do arquivo .mp3 que conseguimos descobrir pela R.raw.m1
+    private Button btn;
     private MediaPlayer mediaPlayer;
     private SeekBar seekBar;
     private Handler handler;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +51,12 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
         seekBar.setOnSeekBarChangeListener(this);
 
         handler = new Handler();
+
+        //botão temporario
+        btn = findViewById(R.id.button2);
+        btn.setOnClickListener(this);
+        flag = false;
+        musica = R.raw.forrodofarol_quincasmoreira; //deixa uma musica ja determinada
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
@@ -57,7 +70,7 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
         if(id == R.id.id001){
             //mediaPlayer = objeto que faz executar o MP3
             if(mediaPlayer == null){
-                mediaPlayer = MediaPlayer.create(this, R.raw.forrodofarol_quincasmoreira); //criando o mediaPlayer, já que não existia
+                mediaPlayer = MediaPlayer.create(this, musica); //criando o mediaPlayer, já que não existia
                 mediaPlayer.setOnCompletionListener(this);
 
                 seekBar.setMax(mediaPlayer.getDuration()); //o tamanho maximo da minha seekbar será a duracao da musica
@@ -72,10 +85,11 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
         }
 
         if(id == R.id.id003){
-            if(mediaPlayer != null){
+            if(mediaPlayer != null && mediaPlayer.isPlaying()){
                 mediaPlayer.stop();
                 mediaPlayer.release(); //desocupar memoria
                 mediaPlayer = null; //desfazemos aquele objeto que uma vez iniciamos
+                //mediaPlayer.start();
             }
         }
 
@@ -130,6 +144,19 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
         if(mediaPlayer != null){
             seekBar.setProgress(mediaPlayer.getCurrentPosition()); //lincando a musica na seekbar que adicionamos, pegando a posicao da musica e atualizando a seekbar
             handler.postDelayed(this, 1000);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view == btn){
+            if(!flag){
+                musica = R.raw.forrodofarol_quincasmoreira;
+                flag = true;
+            }else {
+                musica = R.raw.m1;
+                flag = false;
+            }
         }
     }
 }
