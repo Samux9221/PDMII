@@ -10,19 +10,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+
 public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener, Runnable, View.OnClickListener {
     private Toolbar toolbar;
-    private boolean flag;
-    private int musica; //esse sera o endereço do arquivo .mp3 que conseguimos descobrir pela R.raw.m1
-    private Button btn;
+    private ArrayList<Playlist> lista;
+    private CardView card1, card2, card3, card4, card5;
+    private TextView textoMusicaSelecionada, textoMusicaTocando;
+    private int musica, indiceLista; //esse sera o endereço do arquivo .mp3 que conseguimos descobrir pela R.raw.m1
     private MediaPlayer mediaPlayer;
     private SeekBar seekBar;
     private Handler handler;
@@ -52,11 +57,34 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
 
         handler = new Handler();
 
-        //botão temporario
-        btn = findViewById(R.id.button2);
-        btn.setOnClickListener(this);
-        flag = false;
+
         musica = R.raw.forrodofarol_quincasmoreira; //deixa uma musica ja determinada
+
+        lista = new ArrayList<Playlist>();
+        lista.add(new Playlist("Forró do Farol", R.raw.forrodofarol_quincasmoreira)); //criando e passando como parametro um objeto da clesse Playlist
+        lista.add(new Playlist("Música teste", R.raw.m1));
+        lista.add(new Playlist("Música teste2", R.raw.m2));
+        lista.add(new Playlist("Música teste3", R.raw.m3));
+        lista.add(new Playlist("Música teste4", R.raw.m4));
+
+        card1 = findViewById(R.id.card1);
+        card1.setOnClickListener(this);
+
+        card2 = findViewById(R.id.card2);
+        card2.setOnClickListener(this);
+
+        card3 = findViewById(R.id.card3);
+        card3.setOnClickListener(this);
+
+        card4 = findViewById(R.id.card4);
+        card4.setOnClickListener(this);
+
+        card5 = findViewById(R.id.card5);
+        card5.setOnClickListener(this);
+
+        textoMusicaSelecionada = findViewById(R.id.musicSelec);
+        textoMusicaTocando = findViewById(R.id.musicToc);
+
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
@@ -71,6 +99,7 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
             //mediaPlayer = objeto que faz executar o MP3
             if(mediaPlayer == null){
                 mediaPlayer = MediaPlayer.create(this, musica); //criando o mediaPlayer, já que não existia
+                textoMusicaTocando.setText("Música tocando: " + lista.get(indiceLista).getNome());
                 mediaPlayer.setOnCompletionListener(this);
 
                 seekBar.setMax(mediaPlayer.getDuration()); //o tamanho maximo da minha seekbar será a duracao da musica
@@ -149,14 +178,30 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
 
     @Override
     public void onClick(View view) {
-        if(view == btn){
-            if(!flag){
-                musica = R.raw.forrodofarol_quincasmoreira;
-                flag = true;
-            }else {
-                musica = R.raw.m1;
-                flag = false;
-            }
+        if(view == card1){
+            indiceLista = 0; //primeiro da lista de objetos Playlist que temos
+            textoMusicaSelecionada.setText("Música selecionada: " + lista.get(indiceLista).getNome());
+            musica = lista.get(indiceLista).getMusica();
+        }
+        if(view == card2){
+            indiceLista = 1; //primeiro da lista de objetos Playlist que temos
+            textoMusicaSelecionada.setText("Música selecionada: " + lista.get(indiceLista).getNome());
+            musica = lista.get(indiceLista).getMusica();
+        }
+        if(view == card3){
+            indiceLista = 2; //primeiro da lista de objetos Playlist que temos
+            textoMusicaSelecionada.setText("Música selecionada: " + lista.get(indiceLista).getNome());
+            musica = lista.get(indiceLista).getMusica();
+        }
+        if(view == card4){
+            indiceLista = 3; //primeiro da lista de objetos Playlist que temos
+            textoMusicaSelecionada.setText("Música selecionada: " + lista.get(indiceLista).getNome());
+            musica = lista.get(indiceLista).getMusica();
+        }
+        if(view == card5){
+            indiceLista = 4; //primeiro da lista de objetos Playlist que temos
+            textoMusicaSelecionada.setText("Música selecionada: " + lista.get(indiceLista).getNome());
+            musica = lista.get(indiceLista).getMusica();
         }
     }
 }
