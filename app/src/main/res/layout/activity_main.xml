@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainActivity">
@@ -14,12 +15,14 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/alfa_slab_one"
         android:text="Tela 01"
+        android:textColor="#FFFFFF"
         android:textSize="34sp" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ir para Tela 02" />
+        android:text="Ir para Tela 02"
+        android:textColorLink="#5B2727" />
 
 </LinearLayout>

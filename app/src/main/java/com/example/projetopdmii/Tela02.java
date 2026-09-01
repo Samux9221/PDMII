@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
     private MediaPlayer mediaPlayer;
     private SeekBar seekBar;
     private Handler handler;
+    private ImageView imgPreview, imgNext;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -57,8 +59,11 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
 
         handler = new Handler();
 
+        imgPreview = findViewById(R.id.imageView);
+        imgNext = findViewById(R.id.imageView2);
 
-        musica = R.raw.forrodofarol_quincasmoreira; //deixa uma musica ja determinada
+        imgPreview.setOnClickListener(this);
+        imgNext.setOnClickListener(this);
 
         lista = new ArrayList<Playlist>();
         lista.add(new Playlist("Forró do Farol", R.raw.forrodofarol_quincasmoreira)); //criando e passando como parametro um objeto da clesse Playlist
@@ -85,8 +90,13 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
         textoMusicaSelecionada = findViewById(R.id.musicSelec);
         textoMusicaTocando = findViewById(R.id.musicToc);
 
+        musica = R.raw.forrodofarol_quincasmoreira; //deixa uma musica ja determinada
+        textoMusicaTocando.setText("Música tocando: Nenhuma");
+        textoMusicaSelecionada.setText("Música selecionada: Forró do Farol");
+
     }
 
+    //metodo que trata de todos os elementos que estao na nossa toolbar (parte de cima)
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
 
@@ -97,29 +107,11 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
         }
         if(id == R.id.id001){
             //mediaPlayer = objeto que faz executar o MP3
-            if(mediaPlayer == null){
-                mediaPlayer = MediaPlayer.create(this, musica); //criando o mediaPlayer, já que não existia
-                textoMusicaTocando.setText("Música tocando: " + lista.get(indiceLista).getNome());
-                mediaPlayer.setOnCompletionListener(this);
-
-                seekBar.setMax(mediaPlayer.getDuration()); //o tamanho maximo da minha seekbar será a duracao da musica
-                handler.post(this);
-
-                mediaPlayer.start();
-            } else if(!mediaPlayer.isPlaying()){
-                //se o mediaPlayer não estiver tocando, vamos dar play
-                mediaPlayer.start();
-            }
-
+            play();
         }
 
         if(id == R.id.id003){
-            if(mediaPlayer != null && mediaPlayer.isPlaying()){
-                mediaPlayer.stop();
-                mediaPlayer.release(); //desocupar memoria
-                mediaPlayer = null; //desfazemos aquele objeto que uma vez iniciamos
-                //mediaPlayer.start();
-            }
+            stop();
         }
 
         if(id == R.id.id002){
@@ -141,10 +133,19 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
     public void onCompletion(MediaPlayer mediaPlayer) {
         //quando acabar a musica
 
+        handler.removeCallbacks(this); //essa linha vai remover qualquer chamda de 1segundo que tver agendada, ja que a musica acabou
         mediaPlayer.release(); //desocupando memória
-        mediaPlayer = null;
+        this.mediaPlayer = null;
         seekBar.setProgress(0); //voltando a bolinha da seekbar para o inicio
 
+        indiceLista++; //ja que a musica acabou, pulamos para a proxima
+
+        if(indiceLista >= lista.size()){
+            indiceLista = 0;
+        }
+        textoMusicaSelecionada.setText("Música selecionada: " + lista.get(indiceLista).getNome());
+        stop();
+        play(); //esse play ja vai pegar o indiceLista com seu valor atualizado
 
     }
 
@@ -184,24 +185,75 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
             musica = lista.get(indiceLista).getMusica();
         }
         if(view == card2){
-            indiceLista = 1; //primeiro da lista de objetos Playlist que temos
+            indiceLista = 1;
             textoMusicaSelecionada.setText("Música selecionada: " + lista.get(indiceLista).getNome());
             musica = lista.get(indiceLista).getMusica();
         }
         if(view == card3){
-            indiceLista = 2; //primeiro da lista de objetos Playlist que temos
+            indiceLista = 2;
             textoMusicaSelecionada.setText("Música selecionada: " + lista.get(indiceLista).getNome());
             musica = lista.get(indiceLista).getMusica();
         }
         if(view == card4){
-            indiceLista = 3; //primeiro da lista de objetos Playlist que temos
+            indiceLista = 3;
             textoMusicaSelecionada.setText("Música selecionada: " + lista.get(indiceLista).getNome());
             musica = lista.get(indiceLista).getMusica();
         }
         if(view == card5){
-            indiceLista = 4; //primeiro da lista de objetos Playlist que temos
+            indiceLista = 4;
             textoMusicaSelecionada.setText("Música selecionada: " + lista.get(indiceLista).getNome());
             musica = lista.get(indiceLista).getMusica();
         }
+
+        //Previews e Next
+        if(view == imgPreview){
+            indiceLista--;
+
+            if(indiceLista < 0){
+                indiceLista = lista.size()-1; //lista.size() retorna a quantidade de elementos mesmo
+            }
+            textoMusicaSelecionada.setText("Música selecionada: " + lista.get(indiceLista).getNome());
+            stop();
+            play(); //esse play ja vai pegar o indiceLista com seu valor atualizado
+        }
+        if(view == imgNext){
+            indiceLista++;
+
+            if(indiceLista >= lista.size()){
+                indiceLista = 0;
+            }
+            textoMusicaSelecionada.setText("Música selecionada: " + lista.get(indiceLista).getNome());
+            stop();
+            play(); //esse play ja vai pegar o indiceLista com seu valor atualizado
+        }
     }
+
+    //metodo que chamaremos sempre que quiser tocar a musica
+    public void play(){
+        if(mediaPlayer == null){
+            mediaPlayer = MediaPlayer.create(this, lista.get(indiceLista).getMusica()); //criando o mediaPlayer, já que não existia
+            textoMusicaTocando.setText("Música tocando: " + lista.get(indiceLista).getNome());
+            mediaPlayer.setOnCompletionListener(this);
+
+            seekBar.setMax(mediaPlayer.getDuration()); //o tamanho maximo da minha seekbar será a duracao da musica
+            handler.post(this);
+
+            mediaPlayer.start();
+        } else if(!mediaPlayer.isPlaying()){
+            //se o mediaPlayer não estiver tocando, vamos dar play
+            mediaPlayer.start();
+
+            //atualizando a seekbar
+            handler.post(this);
+        }
+    }
+
+    public void stop(){
+        if(mediaPlayer != null && mediaPlayer.isPlaying()){
+            mediaPlayer.stop();
+            mediaPlayer.release(); //desocupar memoria
+            mediaPlayer = null; //desfazemos aquele objeto que uma vez iniciamos
+        }
+    }
+
 }
