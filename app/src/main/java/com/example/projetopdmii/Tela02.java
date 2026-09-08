@@ -1,5 +1,7 @@
 package com.example.projetopdmii;
 
+import static java.lang.String.format;
+
 import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -27,9 +29,9 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
     private Toolbar toolbar;
     private ArrayList<Playlist> lista;
     private CardView card1, card2, card3, card4, card5;
-    private TextView textoMusicaSelecionada, textoMusicaTocando;
+    private TextView textoMusicaSelecionada, tempoAtual, tempoRestante;
     private int musica, indiceLista; //esse sera o endereço do arquivo .mp3 que conseguimos descobrir pela R.raw.m1
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer; //é uma variavel da classe media player e que tem o objetivo de reproduzir | OBJETO QUE REPRODUZ A MÚSICA
     private SeekBar seekBar;
     private Handler handler;
     private ImageView imgPreview, imgNext;
@@ -48,7 +50,7 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
 
         toolbar = findViewById(R.id.toolbar);
 
-        //Atribuindo a toolbar o "poder" de ser uma actionBar
+        //Atribuindo a toolbar o "poder" de ser uma actionBar | poder de ter botão de up, por exemplo - atribuo ações.
         setSupportActionBar(toolbar);
 
         //criar o botão de voltar
@@ -87,13 +89,28 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
         card5 = findViewById(R.id.card5);
         card5.setOnClickListener(this);
 
+        tempoAtual = findViewById(R.id.textView);
+        tempoRestante = findViewById(R.id.textView2);
+
         textoMusicaSelecionada = findViewById(R.id.musicSelec);
-        textoMusicaTocando = findViewById(R.id.musicToc);
+
 
         musica = R.raw.forrodofarol_quincasmoreira; //deixa uma musica ja determinada
-        textoMusicaTocando.setText("Música tocando: Nenhuma");
         textoMusicaSelecionada.setText("Música selecionada: Forró do Farol");
 
+
+
+    }
+
+    //recebe um tempo em milisegundos e retorna uma string já estilizada
+    public String formatarTempo(int tempo){
+        int segundos = tempo / 1000; //transformando de milisegundos para segundos
+        int minutos = segundos / 60;
+        segundos = segundos % 60;
+
+        String tempoFormatado = String.format("%02d:%02d", minutos, segundos); //2 - seignifica dois digitos; 0 - quando não tiver nada, coloca 0
+
+        return tempoFormatado;
     }
 
     //metodo que trata de todos os elementos que estao na nossa toolbar (parte de cima)
@@ -129,6 +146,7 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
         return true;
     }
 
+    //METODO QUE É CHAMADO AUTOMATICAMENTE QUAND A MUSICA ACABA
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         //quando acabar a musica
@@ -159,12 +177,13 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
 
     }
 
+    //metodo quando tiramos o dedo da seekbar
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         //vamos fazer o controle da bolinha para mudar o tempo da musica
 
         if(mediaPlayer != null){
-            mediaPlayer.seekTo(seekBar.getProgress());
+            mediaPlayer.seekTo(seekBar.getProgress()); //atualiza a seekbar de acordo com o progresso
         }
     }
 
@@ -172,6 +191,13 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
     @Override
     public void run() {
         if(mediaPlayer != null){
+            int tempoTempoAtual = mediaPlayer.getCurrentPosition(); //retorno em milisegundos
+            int duracao = mediaPlayer.getDuration();
+            int tempoTempoRestante = duracao - tempoTempoAtual;
+
+            tempoAtual.setText(formatarTempo(tempoTempoAtual));
+            tempoRestante.setText("-"+formatarTempo(tempoTempoRestante));
+
             seekBar.setProgress(mediaPlayer.getCurrentPosition()); //lincando a musica na seekbar que adicionamos, pegando a posicao da musica e atualizando a seekbar
             handler.postDelayed(this, 1000);
         }
@@ -230,9 +256,15 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
 
     //metodo que chamaremos sempre que quiser tocar a musica
     public void play(){
+
+        //atualizando a toolbar, para musica e indice respectivos (Nome de musica e sua posicao na lista)
+        int listaIndiceFormatado = indiceLista + 1;
+        toolbar.setTitle(lista.get(indiceLista).getNome());
+        toolbar.setSubtitle(Integer.toString(listaIndiceFormatado)+" de "+ Integer.toString(lista.size()));
+
         if(mediaPlayer == null){
             mediaPlayer = MediaPlayer.create(this, lista.get(indiceLista).getMusica()); //criando o mediaPlayer, já que não existia
-            textoMusicaTocando.setText("Música tocando: " + lista.get(indiceLista).getNome());
+            //textoMusicaTocando.setText("Música tocando: " + lista.get(indiceLista).getNome());
             mediaPlayer.setOnCompletionListener(this);
 
             seekBar.setMax(mediaPlayer.getDuration()); //o tamanho maximo da minha seekbar será a duracao da musica
@@ -249,6 +281,7 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
     }
 
     public void stop(){
+        //vai parar caso exista algo, por isso a comparacao
         if(mediaPlayer != null && mediaPlayer.isPlaying()){
             mediaPlayer.stop();
             mediaPlayer.release(); //desocupar memoria

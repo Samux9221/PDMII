@@ -16,8 +16,8 @@
         android:background="#EB9D0C"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:subtitle="Subtítulo"
-        app:title="Título" />
+        app:subtitle="1 de 5"
+        app:title="Nome musica" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,22 +29,22 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView" />
+            android:layout_weight="0.1"
+            android:text="00:00" />
 
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="40px"
-            android:layout_weight="8" />
+            android:layout_weight="0.8" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView" />
+            android:layout_weight="0.1"
+            android:text="00:00" />
     </LinearLayout>
 
     <LinearLayout
@@ -63,15 +63,6 @@
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/musicToc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="@font/abyssinica_sil"
-            android:text="Música tocando"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
     </LinearLayout>
 
     <ScrollView
