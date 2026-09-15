@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         handler.postDelayed(this, 1000);
 
         if(x == 5){
-            startActivity(new Intent(this, Tela02.class));
+            startActivity(new Intent(this, Activity3.class));
             this.finish();
         }
     }
