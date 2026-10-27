@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 */
 public class SlideHolder extends RecyclerView.ViewHolder {
 
-    public TextView titulo, tipo;
+    public TextView titulo, tipo, texto;
     public ImageView imagem;
 
     //construtor dessa classe
@@ -20,6 +20,7 @@ public class SlideHolder extends RecyclerView.ViewHolder {
         super(itemView);
 
         titulo = itemView.findViewById(R.id.titulo);
+        texto = itemView.findViewById(R.id.texto);
         imagem = itemView.findViewById(R.id.imageView3);
         tipo = itemView.findViewById(R.id.tipo);
     }

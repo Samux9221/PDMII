@@ -6,11 +6,6 @@ public class Slide {
     private String texto;
     private String tipo;
 
-    //construtor 1
-    public Slide(String titulo, int imagem){
-        this.titulo = titulo;
-        this.imagem = imagem;
-    }
 
     //construtor 2 - incluindo a descricao agora (texto)
     public Slide(String titulo, int imagem, String texto, String tipo){

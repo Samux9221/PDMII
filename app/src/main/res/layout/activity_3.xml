@@ -1,47 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/iddrawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#1B3845"
     android:orientation="vertical"
     tools:context=".Activity3">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:fontFamily="@font/alfa_slab_one"
-        android:gravity="center"
-        android:text="Build Your Dreams"
-        android:textColor="#FFFFFF"
-        android:textSize="34sp" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </androidx.viewpager2.widget.ViewPager2>
-
     <LinearLayout
+        android:id="@+id/linearPrincipal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="#061923"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme" />
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#000000"
-            android:fontFamily="@font/adlam_display"
+            android:layout_margin="15dp"
+            android:fontFamily="@font/alfa_slab_one"
             android:gravity="center"
-            android:text="Voltar"
+            android:text="Build Your Dreams"
             android:textColor="#FFFFFF"
-            android:textColorLink="#AF8686"
             android:textSize="34sp" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </androidx.viewpager2.widget.ViewPager2>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#000000"
+                android:fontFamily="@font/adlam_display"
+                android:gravity="center"
+                android:text="Voltar"
+                android:textColor="#FFFFFF"
+                android:textColorLink="#AF8686"
+                android:textSize="34sp" />
+        </LinearLayout>
+
     </LinearLayout>
-</LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/cabecalho"
+        app:menu="@menu/menudrawer" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

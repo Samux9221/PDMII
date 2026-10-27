@@ -3,6 +3,7 @@ package com.example.projetopdmii;
 import static java.lang.String.format;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,18 +11,22 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
@@ -35,6 +40,9 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
     private SeekBar seekBar;
     private Handler handler;
     private ImageView imgPreview, imgNext;
+    private DrawerLayout drawer;
+    private NavigationView navigation;
+    private ActionBarDrawerToggle action;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -42,7 +50,7 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_tela02); //essa linha mapeia o arquivo XML
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.linearPrincipal), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -66,6 +74,39 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
 
         imgPreview.setOnClickListener(this);
         imgNext.setOnClickListener(this);
+
+        drawer = findViewById(R.id.iddrawer);
+        navigation = findViewById(R.id.idNavigation);
+
+        action = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
+
+        //tornando ele sensivel a eventos
+        drawer.addDrawerListener(action);
+
+        //sincronizando a action
+        action.syncState();
+
+        navigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                if(menuItem.getItemId() == R.id.idhome){
+                    drawer.closeDrawers();
+                    startActivity(new Intent(Tela02.this, TelaHome.class));
+                    return true;
+                };
+                if(menuItem.getItemId() == R.id.idtela03){
+                    drawer.closeDrawers();
+                    startActivity(new Intent(Tela02.this, Activity3.class));
+                    return true;
+                };
+                if(menuItem.getItemId() == R.id.idmusica){
+                    drawer.closeDrawers();
+                    return false;
+                };
+
+                return false;
+            }
+        });
 
         lista = new ArrayList<Playlist>();
         lista.add(new Playlist("Forró do Farol", R.raw.forrodofarol_quincasmoreira)); //criando e passando como parametro um objeto da clesse Playlist
@@ -101,6 +142,7 @@ public class Tela02 extends AppCompatActivity implements MediaPlayer.OnCompletio
 
 
     }
+
 
     //recebe um tempo em milisegundos e retorna uma string já estilizada
     public String formatarTempo(int tempo){
